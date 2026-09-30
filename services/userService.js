@@ -1,15 +1,36 @@
-const users = [
-  { id: 1, name: "Alex" },
-  { id: 2, name: "Sam" }
-];
+const supabase = require("../db/supabase");
 
-function getUsers() {
-  return users;
+async function getUsers() {
+  const { data, error } = await supabase
+    .from("users")
+    .select("id, name")
+    .order("id", { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
 }
 
-function findUserById(id) {
+async function findUserById(id) {
   const userId = Number(id);
-  return users.find((user) => user.id === userId);
+
+  if (!Number.isInteger(userId)) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("users")
+    .select("id, name")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
 }
 
 module.exports = { getUsers, findUserById };
