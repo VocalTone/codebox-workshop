@@ -2,6 +2,11 @@ require("dotenv").config({ quiet: true });
 
 const express = require("express");
 const requireAuth = require("./middleware/auth");
+const bookRoutes = require("./routes/books");
+const reviewRoutes = require("./routes/reviews");
+const tagRoutes = require("./routes/tags");
+const tbrRoutes = require("./routes/tbr");
+const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 
 const app = express();
@@ -30,6 +35,11 @@ app.get("/api/me", requireAuth, (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/books", bookRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/tags", tagRoutes);
+app.use("/api/me/tbr", tbrRoutes);
 
 app.use((error, req, res, next) => {
   console.error("Supabase request failed", {

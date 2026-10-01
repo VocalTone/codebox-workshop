@@ -36,7 +36,7 @@ async function findUserById(id) {
 async function createUser(user) {
   const { data, error } = await supabase
     .from("users")
-    .insert(user)
+    .insert({ ...user, user_id: `local-${user.id}` })
     .select("id, name")
     .single();
 
