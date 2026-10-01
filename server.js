@@ -1,10 +1,13 @@
 require("dotenv").config({ quiet: true });
 
 const express = require("express");
+const requireAuth = require("./middleware/auth");
 const userRoutes = require("./routes/users");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello from CodeBox!");
@@ -20,6 +23,10 @@ app.get("/api/student", (req, res) => {
     major: "Computer Science",
     school: "Cal Poly"
   });
+});
+
+app.get("/api/me", requireAuth, (req, res) => {
+  res.json({ id: req.user.id, name: req.user.name });
 });
 
 app.use("/api/users", userRoutes);
